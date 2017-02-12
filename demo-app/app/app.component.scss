@@ -1,0 +1,198 @@
+
+// Control the Sidebar with the Variables Below
+$sidebar-color-bg:      #263238;
+$sidebar-color-bg-sub:  #242f35;
+$sidebar-color-font:    rgba(163, 175, 183, .9);
+$sidebar-width:         100%;
+$sidebar-width-sub:     240px;
+$sidebar-offset-top:    0px;
+$sidebar-font-size:     16px;
+$sidebar-font-size-sub: 14px;
+$sidebar-icon-size:     26px;
+
+.site-sidebar {
+  position: fixed;
+  z-index: 1400;
+  top: $sidebar-offset-top;
+  height: 100%;
+  height: -webkit-calc(100% - $sidebar-offset-top);
+  height: calc(100% - $sidebar-offset-top);
+  width: $sidebar-width;
+  background: $sidebar-color-bg;
+  color: $sidebar-color-font;
+  font-family: "Roboto", sans-serif;
+  -webkit-box-shadow: 0 2px 4px rgba($sidebar-color-bg, .08);
+  box-shadow: 0 2px 4px rgba($sidebar-color-bg, .08);
+
+  // Global Styles for All Menu Levels ---------------------------------------
+  .site-sidebar-body {
+    height: 100%;
+
+    a {
+      outline: none;
+
+      &:hover, &:focus {
+        text-decoration: none;
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      // All List Items
+      li {
+        position: relative;
+        white-space: nowrap;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
+
+        // Active Appearance
+        &.active {
+          background-color: rgba(255, 255, 255, .01);
+
+          & > a {
+            color: rgba(255, 255, 255, 0.9);
+          }
+        }
+
+        // Hover for Menu Items
+        &:hover {
+          background-color: rgba(255, 255, 255, .03);
+          border-top-color: rgba(0, 0, 0, .125);
+          border-bottom-color: rgba(0, 0, 0, .125);
+
+          & > a {
+            color: rgba(255, 255, 255, 0.9);
+
+            .site-menu-arrow {
+              -webkit-transform: translateX(15px);
+              -ms-transform: translateX(15px);
+              -o-transform: translateX(15px);
+              transform: translateX(15px);
+            }
+
+          }
+
+          // Make the Sub Menu Appear
+          & > ul {
+            display: block;
+            position: absolute;
+            left: 100%;
+            top: -1px;
+            width: $sidebar-width-sub;
+            background: $sidebar-color-bg-sub;
+            overflow: visible;
+          }
+        }
+
+        a {
+          display: block;
+          color: $sidebar-color-font;
+        }
+      }
+
+      .site-menu-icon {
+        display: block !important;
+        margin: 0 auto;
+        font-size: $sidebar-icon-size;
+        width: 1em;
+        text-align: center;
+      }
+
+      .site-menu-title {
+        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .site-menu-category {
+        font: "0/0" a;
+        color: transparent;
+        text-shadow: none;
+        height: 2px;
+        background: $sidebar-color-bg-sub;
+        margin: 0;
+
+        &:first-child {
+          visibility: hidden;
+        }
+      }
+
+      .site-menu-arrow {
+        position: absolute;
+        right: 30px;
+        display: inline-block;
+        vertical-align: bottom;
+        -webkit-transition: -webkit-transform .15s;
+        -o-transition: -o-transform .15s;
+        transition: transform .15s;
+        font-style: normal;
+        font-weight: normal;
+        text-rendering: auto;
+        speak: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        -o-transform: translate(0, 0);
+        transform: translate(0, 0);
+
+        &:before {
+          font-family: FontAwesome;
+          content: "\f105"; // fa-angle-right
+        }
+      }
+
+      .site-menu-badge, .site-menu-label {
+        position: absolute;
+        right: 30px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
+    // Overriding Styles for First Level Menu --------------------------------
+    ul.site-menu {
+      font-size: $sidebar-font-size;
+      overflow: visible;
+
+      & > li {
+        &  > a {
+          display: block;
+          margin: 0;
+          padding: 12px;
+          border: 0;
+          text-decoration: none;
+          text-align: center;
+          white-space: nowrap;
+          cursor: pointer;
+
+          .site-menu-badge, .site-menu-label {
+            left: 50%;
+            top: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  // Overriding Styles for Sub Menu Items ------------------------------------
+  ul.site-menu-sub {
+
+    font-size: $sidebar-font-size-sub;
+    display: none;
+
+    li {
+      line-height: 36px;
+      color: $sidebar-color-font;
+      background: transparent;
+
+      a {
+        padding: 0 30px;
+      }
+    }
+  }
+}
