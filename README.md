@@ -2,7 +2,7 @@
 
 Angular Directive for Hover Scrolling: Scroll Content by Hovering Over It
 
-![ng-hoverscroll in action](https://github.com/ArroyoNetworks/hg-hoverscroll/raw/master/docs/hoverscroll.gif)
+![ng-hoverscroll in action](https://github.com/ArroyoNetworks/ng-hoverscroll/raw/master/docs/hoverscroll.gif)
 
 ### Table of Contents
 
@@ -50,6 +50,7 @@ Follow the instructions below for adding `ng-hoverscroll` to your Angular applic
     </div>
     ```
 
+Currently only vertical scrolling is supported.
 
 ### Demo App
 
