@@ -1,5 +1,12 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { Observable } from "rxjs";
 
+
+enum ScrollDeltaMode {
+    DOM_DELTA_PIXEL = 0x00,
+    DOM_DELTA_LINE = 0x01,
+    DOM_DELTA_PAGE = 0x02,
+}
 
 /**
  *  This directive creates an effect that vertically scrolls an element automatically when it is hovered upon when
@@ -19,34 +26,48 @@ export class HoverScrollDirective {
     @Input() scrollBuffer: number;
     @Input() stableBuffer: number = 25;
 
+    // The Directive's Element.
     private elem: any;
-    private initY: number;
-    private hasExceededStableBuffer: boolean;
+
+    // Initial Absolute Y-Coordinate on Enter.
+    private initY: number = 0;
+
+    // Flag to Determine if Stabilizing Buffer has been Exceeded.
+    private hasExceededStableBuffer: boolean = false;
+
+    // Flag to Disable Pointer Event Handling until Pointer Re-enters.
+    private disablePointerEvents: boolean = false;
 
     constructor(el: ElementRef) {
-        this.elem = el.nativeElement;
-        this.hasExceededStableBuffer = false;
+        this.elem = el;
+
+        // Set up Even Handlers
+        //  We do not use HostListeners for the Events we Want to Throttle
+        this.setupWheelObservables()
+
     }
 
     /* -----------------------------
-            Event Handlers
+         Pointer Event Handlers
     ----------------------------- */
 
     @HostListener('pointerenter', ['$event'])
-    onPointerEnter(pointer: PointerEvent) {
-        this.hasExceededStableBuffer = false;
+    private onPointerEnter(pointer: PointerEvent) {
         this.initY = pointer.pageY;
     }
 
     @HostListener('pointerleave')
-    onPointerLeave() {
+    private onPointerLeave() {
+
+        // Reset Flags
         this.hasExceededStableBuffer = false;
+        this.disablePointerEvents = false;
     }
 
     @HostListener('pointermove', ['$event'])
-    onPointerMove(pointer: PointerEvent) {
+    private onPointerMove(pointer: PointerEvent) {
 
-        if (!this.isScrollable()) {
+        if (!this.isScrollable() || this.disablePointerEvents) {
             return;
         }
 
@@ -62,7 +83,7 @@ export class HoverScrollDirective {
 
         // Second ------------------------------------------------------------
         //  Determine the Y coordinate in relation to the top of the container vs the window
-        let relativeY = pointer.pageY - this.elem.getBoundingClientRect().top;
+        let relativeY = pointer.pageY - this.getElemTop();
 
 
         // Third -------------------------------------------------------------
@@ -75,14 +96,8 @@ export class HoverScrollDirective {
         }
 
         // If we are within the bottom buffer, move all the way down
-        if (relativeY > (this.elem.clientHeight - this.scrollBuffer)) {
-            distance = (this.getChildHeight() - this.elem.clientHeight);
-        }
-
-        // Make sure we do not go past the end of the content, and if we are,
-        // just set the distance to the bottom.
-        if (distance > (this.getChildHeight() - this.elem.clientHeight)) {
-            distance = (this.getChildHeight() - this.elem.clientHeight);
+        if (relativeY > (this.getElemHeight() - this.scrollBuffer)) {
+            distance = this.getHeightDifference();
         }
 
         // Fourth ------------------------------------------------------------
@@ -92,23 +107,73 @@ export class HoverScrollDirective {
     }
 
     /* -----------------------------
+        Scrolling Event Handlers
+    ----------------------------- */
+
+    private setupWheelObservables() {
+        Observable.fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
+             .auditTime(10)
+            .subscribe((event) => {this.onWheelEvent(event)});
+
+    }
+
+    private onWheelEvent(wheel: WheelEvent) {
+
+        // First -------------------------------------------------------------
+        //  Disable Pointer Events
+        this.disablePointerEvents = true;
+
+        // Second ------------------------------------------------------------
+        //  Determine how many pixels to scroll
+        let delta = 0;
+        switch (wheel.deltaMode) {
+            case ScrollDeltaMode.DOM_DELTA_PIXEL:
+                delta = wheel.deltaY;
+                break;
+            case ScrollDeltaMode.DOM_DELTA_LINE:
+                delta = this.getChild().style.lineHeight * wheel.deltaY;
+                break;
+            case ScrollDeltaMode.DOM_DELTA_PAGE:
+                delta = this.getElemHeight() * wheel.deltaY;
+                break;
+            default:
+                console.warn("Unknown Wheel Delta Mode");
+                return
+        }
+
+        // Third -------------------------------------------------------------
+        //  Update the Content Container Position
+        let distance = this.getChildTop() - delta;
+        this.moveChild(distance);
+
+    }
+
+    /* -----------------------------
             Element Helpers
     ----------------------------- */
 
+    private getElemHeight(): number {
+        return this.elem.nativeElement.clientHeight;
+    }
+
+    private getElemTop(): number {
+        return this.elem.nativeElement.getBoundingClientRect().top
+    }
+
     private getChild(): any {
-        return this.elem.firstElementChild
+        return this.elem.nativeElement.firstElementChild
     }
 
     private getChildHeight(): number {
         return this.getChild().clientHeight;
     }
 
-    /**
-     * @returns {boolean} true if the content is scrollable, e.g. the inside content is larger than the outside
-     * container, otherwise false.
-     */
-    private isScrollable(): boolean {
-        return this.elem.clientHeight < this.getChildHeight();
+    private getChildTop(): number {
+        return this.getChild().getBoundingClientRect().top
+    }
+
+    private getHeightDifference(): number {
+        return this.getChildHeight() - this.getElemHeight();
     }
 
     /* -----------------------------
@@ -116,14 +181,35 @@ export class HoverScrollDirective {
     ----------------------------- */
 
     /**
+     * @returns {boolean} true if the content is scrollable, e.g. the inside content is larger than the outside
+     * container, otherwise false.
+     */
+    private isScrollable(): boolean {
+        return this.getElemHeight() < this.getChildHeight();
+    }
+
+    /**
      * @returns {number} The percentage of the content which is hidden and must be scrolled into view.
      */
     private getHiddenRatio(): number {
         // Make sure we subtract twice the scrollBuffer so that it is added to both the top and the bottom.
-        return (this.getChildHeight() - this.elem.clientHeight) / (this.elem.clientHeight - (2 * this.scrollBuffer));
+        return this.getHeightDifference() / (this.getElemHeight() - (2 * this.scrollBuffer));
     }
 
     private moveChild(yPos: number) {
+
+        // Make sure we do not go past the end of the content, and if we are,
+        // just set the distance to the bottom.
+        if (yPos < -this.getHeightDifference()) {
+            yPos = -this.getHeightDifference();
+        }
+
+        // Make sure we do not go past the top of the content, and if we are,
+        // just set the distance to the top.
+        if (yPos > this.getElemTop()) {
+            yPos = 0;
+        }
+
         let transform = "translateY(" + yPos + "px)";
         this.getChild().style.transform = transform;
         this.getChild().style["-webkit-transform"] = transform;
