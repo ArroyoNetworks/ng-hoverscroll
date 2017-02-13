@@ -9,22 +9,39 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
  *
  *  Support the following inputs:
  *      - scrollBuffer {number} Added scroll buffer on the top/bottom of the container.
+ *      - stableBuffer {number} Buffer on mouse entry that the cursor must traverse before scrolling. Default: 25px.
  */
 @Directive({
     selector: '[hoverScroll]'
 })
 export class HoverScrollDirective {
-    
-    private elem: any;
+
     @Input() scrollBuffer: number;
-    
+    @Input() stableBuffer: number = 25;
+
+    private elem: any;
+    private initY: number;
+    private hasExceededStableBuffer: boolean;
+
     constructor(el: ElementRef) {
-        this.elem = el.nativeElement
+        this.elem = el.nativeElement;
+        this.hasExceededStableBuffer = false;
     }
 
     /* -----------------------------
             Event Handlers
     ----------------------------- */
+
+    @HostListener('pointerenter', ['$event'])
+    onPointerEnter(pointer: PointerEvent) {
+        this.hasExceededStableBuffer = false;
+        this.initY = pointer.pageY;
+    }
+
+    @HostListener('pointerleave')
+    onPointerLeave() {
+        this.hasExceededStableBuffer = false;
+    }
 
     @HostListener('pointermove', ['$event'])
     onPointerMove(pointer: PointerEvent) {
@@ -34,11 +51,21 @@ export class HoverScrollDirective {
         }
 
         // First -------------------------------------------------------------
+        //  Determine the Pointer has Exceeded the Stabilizing Threshold
+        if (pointer.pageY > (this.initY + this.stableBuffer) || pointer.pageY < (this.initY - this.stableBuffer)) {
+            this.hasExceededStableBuffer = true;
+        }
+
+        if (!this.hasExceededStableBuffer) {
+            return;
+        }
+
+        // Second ------------------------------------------------------------
         //  Determine the Y coordinate in relation to the top of the container vs the window
         let relativeY = pointer.pageY - this.elem.getBoundingClientRect().top;
 
 
-        // Second ------------------------------------------------------------
+        // Third -------------------------------------------------------------
         //  Determine the Distance to Scroll the Content taking into account the Scroll Buffer Amount
         let distance = (relativeY - this.scrollBuffer) * this.getHiddenRatio();
 
@@ -58,7 +85,7 @@ export class HoverScrollDirective {
             distance = (this.getChildHeight() - this.elem.clientHeight);
         }
 
-        // Third -------------------------------------------------------------
+        // Fourth ------------------------------------------------------------
         //  Update the Content Container Position
         this.moveChild(-distance)
 
@@ -76,6 +103,10 @@ export class HoverScrollDirective {
         return this.getChild().clientHeight;
     }
 
+    /**
+     * @returns {boolean} true if the content is scrollable, e.g. the inside content is larger than the outside
+     * container, otherwise false.
+     */
     private isScrollable(): boolean {
         return this.elem.clientHeight < this.getChildHeight();
     }
