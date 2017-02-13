@@ -41,10 +41,9 @@ export class HoverScrollDirective {
     constructor(el: ElementRef) {
         this.elem = el;
 
-        // Set up Even Handlers
+        // Set up Event Handlers
         //  We do not use HostListeners for the Events we Want to Throttle
-        this.setupWheelObservables()
-
+        this.setupWheelObservables();
     }
 
     /* -----------------------------
@@ -103,7 +102,6 @@ export class HoverScrollDirective {
         // Fourth ------------------------------------------------------------
         //  Update the Content Container Position
         this.moveChild(-distance)
-
     }
 
     /* -----------------------------
@@ -114,7 +112,6 @@ export class HoverScrollDirective {
         Observable.fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
              .auditTime(10)
             .subscribe((event) => {this.onWheelEvent(event)});
-
     }
 
     private onWheelEvent(wheel: WheelEvent) {
@@ -145,7 +142,6 @@ export class HoverScrollDirective {
         //  Update the Content Container Position
         let distance = this.getChildTop() - delta;
         this.moveChild(distance);
-
     }
 
     /* -----------------------------
