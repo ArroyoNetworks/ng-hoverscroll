@@ -1,7 +1,17 @@
 {
   "name": "ng-hoverscroll",
   "version": "0.0.1",
+  "author": "Matthew Ellison <matt@arroyonetworks.com>",
   "license": "MIT",
+  "keywords": [
+    "ng",
+    "angular",
+    "angular2",
+    "scroll",
+    "scrolling",
+    "hoverscroll",
+    "autoscroll"
+  ],
   "angular-cli": {},
   "main": "src/index.ts",
   "typings": "src/index.ts",
