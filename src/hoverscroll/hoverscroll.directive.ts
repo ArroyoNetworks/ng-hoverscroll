@@ -15,7 +15,7 @@ enum ScrollDeltaMode {
  *  Currently it assumes the immediate child element is the contents of the scrollable element.
  *
  *  Support the following inputs:
- *      - scrollBuffer {number} Added scroll buffer on the top/bottom of the container.
+ *      - scrollBuffer {number} Added scroll buffer on the top/bottom of the container. Default: 0px.
  *      - stableBuffer {number} Buffer on mouse entry that the cursor must traverse before scrolling. Default: 25px.
  */
 @Directive({
@@ -23,7 +23,7 @@ enum ScrollDeltaMode {
 })
 export class HoverScrollDirective {
 
-    @Input() scrollBuffer: number;
+    @Input() scrollBuffer: number = 0;
     @Input() stableBuffer: number = 25;
 
     // The Directive's Element.
