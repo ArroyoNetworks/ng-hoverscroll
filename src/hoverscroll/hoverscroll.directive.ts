@@ -50,6 +50,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
     // Set up Event Handlers
     //  We do not use HostListeners for the Events we Want to Throttle
     this.setupWheelObservables();
+    this.setupResizeObservables();
   }
 
   ngOnDestroy() {
@@ -157,6 +158,22 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
     //  Update the Content Container Position
     let distance = this.getChildTop() - delta;
     this.moveChild(distance);
+  }
+
+  private setupResizeObservables() {
+    this.eventSubs['onWindowResize'] = Observable.fromEvent<Event>(window, 'resize')
+        .auditTime(500)
+        .subscribe(() => {
+          this.onWindowResizeEvent();
+        });
+  }
+
+  private onWindowResizeEvent() {
+    // If the content can no longer be scrolled after a resize occurs,
+    // move the content back to the top.
+    if (!this.isScrollable()) {
+      this.moveChild(0);
+    }
   }
 
   /* -----------------------------
