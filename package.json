@@ -1,16 +1,16 @@
 {
-  "name": "ng-hoverscroll",
-  "version": "1.0.2",
+  "name": "ngx-hoverscroll",
+  "version": "1.0.3",
   "author": "Matthew Ellison <matt@arroyonetworks.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/ArroyoNetworks/ng-hoverscroll.git"
+    "url": "git+ssh://git@github.com/ArroyoNetworks/ngx-hoverscroll.git"
   },
   "bugs": {
-    "url": "https://github.com/ArroyoNetworks/ng-hoverscroll/issues"
+    "url": "https://github.com/ArroyoNetworks/ngx-hoverscroll/issues"
   },
-  "homepage": "https://github.com/ArroyoNetworks/ng-hoverscroll",
+  "homepage": "https://github.com/ArroyoNetworks/ngx-hoverscroll",
   "keywords": [
     "ng",
     "angular",

@@ -1,8 +1,8 @@
-# ng-hoverscroll
+# ngx-hoverscroll
 
 Angular Directive for Hover Scrolling: Scroll Content by Hovering Over It
 
-![ng-hoverscroll in action](https://github.com/ArroyoNetworks/ng-hoverscroll/raw/master/docs/hoverscroll.gif)
+![ngx-hoverscroll in action](https://github.com/ArroyoNetworks/ngx-hoverscroll/raw/master/docs/hoverscroll.gif)
 
 ### Table of Contents
 
@@ -15,9 +15,9 @@ Angular Directive for Hover Scrolling: Scroll Content by Hovering Over It
 
 ## Installation
 
-Install `ng-hoverscroll` from `npm`:
+Install `ngx-hoverscroll` from `npm`:
 ```bash
-npm install ng-hoverscroll --save
+> npm install ngx-hoverscroll --save
 ```
 
 It's that simple.
@@ -25,11 +25,11 @@ It's that simple.
 
 ## Getting Started
 
-Follow the instructions below for adding `ng-hoverscroll` to your Angular application:
+Follow the instructions below for adding `ngx-hoverscroll` to your Angular application:
 
 1. Add the Imports to your Module. For example, `app.module.ts`:
     ```typescript
-    import { HoverScrollModule } from 'ng-hoverscroll';
+    import { HoverScrollModule } from 'ngx-hoverscroll';
     ...
     
     @NgModule({
