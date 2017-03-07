@@ -1,5 +1,5 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
-import { Observable } from "rxjs";
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from "rxjs";
 
 
 enum ScrollDeltaMode {
@@ -21,7 +21,7 @@ enum ScrollDeltaMode {
 @Directive({
   selector: '[hoverScroll]'
 })
-export class HoverScrollDirective {
+export class HoverScrollDirective implements OnInit, OnDestroy {
 
   @Input() scrollBuffer: number = 0;
   @Input() stableBuffer: number = 25;
@@ -38,12 +38,25 @@ export class HoverScrollDirective {
   // Flag to Disable Pointer Event Handling until Pointer Re-enters.
   private disablePointerEvents: boolean = false;
 
+  // Event Subscriptions
+  private eventSubs: Map<string, Subscription>;
+
   constructor(el: ElementRef) {
     this.elem = el;
+    this.eventSubs = new Map<string, Subscription>();
+  }
 
+  ngOnInit() {
     // Set up Event Handlers
     //  We do not use HostListeners for the Events we Want to Throttle
     this.setupWheelObservables();
+  }
+
+  ngOnDestroy() {
+    // Remove Event Handler Subscriptions
+    this.eventSubs.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
   /* -----------------------------
@@ -109,7 +122,7 @@ export class HoverScrollDirective {
    ----------------------------- */
 
   private setupWheelObservables() {
-    Observable.fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
+    this.eventSubs['onWheel'] =  Observable.fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
         .auditTime(10)
         .subscribe((event) => {
           this.onWheelEvent(event)
