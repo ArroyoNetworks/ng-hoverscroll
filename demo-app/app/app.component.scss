@@ -12,8 +12,8 @@ $sidebar-icon-size:     26px;
 
 .site-sidebar {
   position: fixed;
-  z-index: 1400;
   top: $sidebar-offset-top;
+  right: 0;
   height: 100%;
   height: -webkit-calc(100% - $sidebar-offset-top);
   height: calc(100% - $sidebar-offset-top);
