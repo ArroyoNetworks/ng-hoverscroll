@@ -31,7 +31,7 @@
     "e2e": "protractor"
   },
   "peerDependencies": {
-    "@angular/core": "^2.3.1",
+    "@angular/core": "^2.3.1 || ^4.0.0",
     "rxjs": "^5.0.1"
   },
   "dependencies": {},
