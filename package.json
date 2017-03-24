@@ -1,6 +1,6 @@
 {
-  "name": "ngx-hoverscroll",
-  "version": "1.0.3",
+  "name": "@arroyo/ngx-hoverscroll",
+  "version": "1.0.4",
   "author": "Matthew Ellison <matt@arroyonetworks.com>",
   "license": "MIT",
   "repository": {
