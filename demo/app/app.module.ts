@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { HoverScrollModule } from '../../src/hoverscroll'
+import { HoverScrollModule } from '../../projects/hoverscroll/src/public_api';
 
 import { AppComponent } from './app.component';
 

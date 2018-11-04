@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { HoverScrollDirective } from './hoverscroll.directive'
+import { HoverScrollDirective } from './hoverscroll.directive';
 
 @NgModule({
     declarations: [HoverScrollDirective],

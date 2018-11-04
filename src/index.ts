@@ -1,1 +1,0 @@
-export { HoverScrollDirective, HoverScrollModule } from './hoverscroll'

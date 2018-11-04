@@ -1,5 +1,6 @@
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subscription } from "rxjs";
+import { Subscription, fromEvent } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
 
 
 enum ScrollDeltaMode {
@@ -23,20 +24,20 @@ enum ScrollDeltaMode {
 })
 export class HoverScrollDirective implements OnInit, OnDestroy {
 
-  @Input() scrollBuffer: number = 0;
-  @Input() stableBuffer: number = 25;
+  @Input() scrollBuffer = 0;
+  @Input() stableBuffer = 25;
 
   // The Directive's Element.
   private elem: any;
 
   // Initial Absolute Y-Coordinate on Enter.
-  private initY: number = 0;
+  private initY = 0;
 
   // Flag to Determine if Stabilizing Buffer has been Exceeded.
-  private hasExceededStableBuffer: boolean = false;
+  private hasExceededStableBuffer = false;
 
   // Flag to Disable Pointer Event Handling until Pointer Re-enters.
-  private disablePointerEvents: boolean = false;
+  private disablePointerEvents = false;
 
   // Event Subscriptions
   private eventSubs: Map<string, Subscription>;
@@ -96,7 +97,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
     // Second ------------------------------------------------------------
     //  Determine the Y coordinate in relation to the top of the container vs the window
-    let relativeY = pointer.pageY - this.getElemTop();
+    const relativeY = pointer.pageY - this.getElemTop();
 
 
     // Third -------------------------------------------------------------
@@ -115,7 +116,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
     // Fourth ------------------------------------------------------------
     //  Update the Content Container Position
-    this.moveChild(-distance)
+    this.moveChild(-distance);
   }
 
   /* -----------------------------
@@ -123,10 +124,12 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
    ----------------------------- */
 
   private setupWheelObservables() {
-    this.eventSubs['onWheel'] =  Observable.fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
-        .auditTime(10)
+    this.eventSubs['onWheel'] =  fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
+        .pipe(
+          auditTime(10)
+        )
         .subscribe((event) => {
-          this.onWheelEvent(event)
+          this.onWheelEvent(event);
         });
   }
 
@@ -150,19 +153,21 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
         delta = this.getElemHeight() * wheel.deltaY;
         break;
       default:
-        console.warn("Unknown Wheel Delta Mode");
-        return
+        console.warn('Unknown Wheel Delta Mode');
+        return;
     }
 
     // Third -------------------------------------------------------------
     //  Update the Content Container Position
-    let distance = this.getChildTop() - delta;
+    const distance = this.getChildTop() - delta;
     this.moveChild(distance);
   }
 
   private setupResizeObservables() {
-    this.eventSubs['onWindowResize'] = Observable.fromEvent<Event>(window, 'resize')
-        .auditTime(500)
+    this.eventSubs['onWindowResize'] = fromEvent<Event>(window, 'resize')
+        .pipe(
+          auditTime(500)
+        )
         .subscribe(() => {
           this.onWindowResizeEvent();
         });
@@ -185,11 +190,11 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   }
 
   private getElemTop(): number {
-    return this.elem.nativeElement.getBoundingClientRect().top
+    return this.elem.nativeElement.getBoundingClientRect().top;
   }
 
   private getChild(): any {
-    return this.elem.nativeElement.firstElementChild
+    return this.elem.nativeElement.firstElementChild;
   }
 
   private getChildHeight(): number {
@@ -197,7 +202,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   }
 
   private getChildTop(): number {
-    return this.getChild().getBoundingClientRect().top
+    return this.getChild().getBoundingClientRect().top;
   }
 
   private getHeightDifference(): number {
@@ -209,7 +214,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
    ----------------------------- */
 
   /**
-   * @returns {boolean} true if the content is scrollable, e.g. the inside content is larger than the outside
+   * @returns true if the content is scrollable, e.g. the inside content is larger than the outside
    * container, otherwise false.
    */
   private isScrollable(): boolean {
@@ -217,7 +222,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   }
 
   /**
-   * @returns {number} The percentage of the content which is hidden and must be scrolled into view.
+   * @returns The percentage of the content which is hidden and must be scrolled into view.
    */
   private getHiddenRatio(): number {
     // Make sure we subtract twice the scrollBuffer so that it is added to both the top and the bottom.
@@ -238,11 +243,10 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
       yPos = 0;
     }
 
-    let transform = "translateY(" + yPos + "px)";
+    const transform = 'translateY(' + yPos + 'px)';
     this.getChild().style.transform = transform;
-    this.getChild().style["-webkit-transform"] = transform;
-    this.getChild().style["-ms-transform"] = transform;
+    this.getChild().style['-webkit-transform'] = transform;
+    this.getChild().style['-ms-transform'] = transform;
   }
 
 }
-

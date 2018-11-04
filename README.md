@@ -4,6 +4,12 @@ Angular Directive for Hover Scrolling: Scroll Content by Hovering Over It
 
 ![ngx-hoverscroll in action](https://github.com/ArroyoNetworks/ngx-hoverscroll/raw/master/docs/hoverscroll.gif)
 
+## Supported Angular Versions
+
+**2.0.0**
+- Angular 6
+- Angular 7 
+
 ### Table of Contents
 
 1. [Installation](#installation)
@@ -15,9 +21,9 @@ Angular Directive for Hover Scrolling: Scroll Content by Hovering Over It
 
 ## Installation
 
-Install `ngx-hoverscroll` from `npm`:
+Install `@arroyo/ngx-hoverscroll` from `npm`:
 ```bash
-> npm install ngx-hoverscroll --save
+> npm install @arroyo/ngx-hoverscroll
 ```
 
 It's that simple.
@@ -29,7 +35,7 @@ Follow the instructions below for adding `ngx-hoverscroll` to your Angular appli
 
 1. Add the Imports to your Module. For example, `app.module.ts`:
     ```typescript
-    import { HoverScrollModule } from 'ngx-hoverscroll';
+    import { HoverScrollModule } from '@arroyo/ngx-hoverscroll';
     ...
     
     @NgModule({
@@ -54,10 +60,12 @@ Currently only vertical scrolling is supported.
 
 ### Demo App
 
-A demo application is included. It is built with `angular-cli`. To run the demo install `angular-cli` and run
-`ng serve`.
+A demo application is included. It is built with `angular-cli`. To run the demo install `angular-cli` and run:
+```bash
+> ng serve demo
+```
 
-The demo application is found in the `demo-app/` directory.
+The demo application is found in the `demo/` directory.
 
 
 ### Advanced Usage
@@ -81,8 +89,12 @@ The directive takes the following inputs:
 
 ## Contributing
 
-We are currently working on our online Contributor License Agreement form and submission guidelines.
-Until then, pull requests will be managed on a per-case basis.
-
 By submitting a pull request or changes for this project, you agree to license your contribution
 under the MIT license to this project.
+
+To ensure that you have the ability to publish your changes under our licensing requirements, we require
+that you, as the patch provider, provide a Sign-off, which provided, means that you have the necessary permissions or have been
+granted the permissions to provide the offered code or patches. 
+
+As an author, please sign your commits as often as possible using your published GPG key.
+
