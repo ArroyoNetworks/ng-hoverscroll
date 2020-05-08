@@ -1,10 +1,8 @@
 <div align="center">
     <h1>ngx-hoverscroll</h1>
+    <p>Directive for Hover Scrolling: Scroll Content by Hovering Over It!</p>
+    <img src="https://raw.githubusercontent.com/arroyonetworks/ngx-hoverscroll/f3698d0ac7d01bddb67dc67a1dfed6ab28b92b69/docs/hoverscroll.gif">
 </div>
-
-Directive for Hover Scrolling: Scroll Content by Hovering Over It!
-
-![ngx-hoverscroll in action](https://raw.githubusercontent.com/arroyonetworks/ngx-hoverscroll/f3698d0ac7d01bddb67dc67a1dfed6ab28b92b69/docs/hoverscroll.gif)
 
 ## Dependencies
 
