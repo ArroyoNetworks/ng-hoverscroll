@@ -1,3 +1,10 @@
+/**
+ * --------------------------------------------------------------------------
+ * ngx-hoverscroll
+ * Licensed under MIT (https://github.com/arroyonetworks/ngx-hoverscroll/blob/master/LICENSE)
+ * --------------------------------------------------------------------------
+ */
+
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { auditTime } from 'rxjs/operators';

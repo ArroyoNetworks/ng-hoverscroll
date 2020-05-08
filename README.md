@@ -1,23 +1,22 @@
-# ngx-hoverscroll
+<div align="center">
+    <h1>ngx-hoverscroll</h1>
+</div>
 
-Angular Directive for Hover Scrolling: Scroll Content by Hovering Over It
+Directive for Hover Scrolling: Scroll Content by Hovering Over It!
 
-![ngx-hoverscroll in action](https://github.com/ArroyoNetworks/ngx-hoverscroll/raw/master/docs/hoverscroll.gif)
+![ngx-hoverscroll in action](https://raw.githubusercontent.com/arroyonetworks/ngx-hoverscroll/f3698d0ac7d01bddb67dc67a1dfed6ab28b92b69/docs/hoverscroll.gif)
 
-## Supported Angular Versions
+## Dependencies
 
-**2.0.0**
-- Angular 6
-- Angular 7 
+Angular Support
 
-### Table of Contents
+| Version           | Angular Version   |
+|:-----------------:|:-----------------:|
+| 2.0.0             | 6-7               |
+| **2.0.2**         | 6-9               |
 
-1. [Installation](#installation)
-2. [Getting Started](#getting-started)
-    1. [Demo App](#demo-app)
-    2. [Advanced Usage](#advanced-usage)
-3. [Contributing](#contributing)
 
+No external dependencies other than Angular are required!
 
 ## Installation
 
@@ -56,7 +55,7 @@ Follow the instructions below for adding `ngx-hoverscroll` to your Angular appli
     </div>
     ```
 
-Currently only vertical scrolling is supported.
+At this time, only vertical scrolling is supported.
 
 ### Demo App
 
@@ -65,7 +64,7 @@ A demo application is included. It is built with `angular-cli`. To run the demo 
 > ng serve demo
 ```
 
-The demo application is found in the `demo/` directory.
+The demo application is found in the `demo/` directory inside projects.
 
 
 ### Advanced Usage
@@ -98,3 +97,9 @@ granted the permissions to provide the offered code or patches.
 
 As an author, please sign your commits as often as possible using your published GPG key.
 
+## License
+
+MIT License
+
+Copyright (c) 2017 Arroyo Networks, LLC <br>
+Copyright (c) 2020 Arroyo Networks, Inc.
