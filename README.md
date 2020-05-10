@@ -78,20 +78,12 @@ See the demo app for a working example.
 
 The directive takes the following inputs:
 
-- ``scrollBuffer (number)`` Added scroll buffer on the top/bottom of the container. Default: 0px.
-- ``stableBuffer (number)`` Buffer on mouse entry that the cursor must traverse before scrolling. Default: 25px.
+| Input Name                | Type      | Default   | Description   |
+|:--------------------------|:---------:|:---------:|:--------------|
+| scrollBuffer              | number    | `0`       | Added buffer in pixels (vertically) on the top/bottom of the container in which scrolling will not occur.
+| stableBuffer              | number    | `25`      | Tolerance in pixels (vertically) that the cursor must traverse before scrolling.
+| wheelMultiplier           | number    | `2`       | Multiplier of delta change when scrolling with the mouse wheel.
 
-
-## Contributing
-
-By submitting a pull request or changes for this project, you agree to license your contribution
-under the MIT license to this project.
-
-To ensure that you have the ability to publish your changes under our licensing requirements, we require
-that you, as the patch provider, provide a Sign-off, which provided, means that you have the necessary permissions or have been
-granted the permissions to provide the offered code or patches. 
-
-As an author, please sign your commits as often as possible using your published GPG key.
 
 ## License
 

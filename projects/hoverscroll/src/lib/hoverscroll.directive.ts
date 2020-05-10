@@ -28,18 +28,29 @@ enum ScrollDeltaMode {
  *  its contents have a greater height.
  *
  *  Currently it assumes the immediate child element is the contents of the scrollable element.
- *
- *  Support the following inputs:
- *      - scrollBuffer {number} Added scroll buffer on the top/bottom of the container. Default: 0px.
- *      - stableBuffer {number} Buffer on mouse entry that the cursor must traverse before scrolling. Default: 25px.
  */
 @Directive({
   selector: '[hoverScroll]'
 })
 export class HoverScrollDirective implements OnInit, OnDestroy {
 
+  /**
+   * Added buffer in pixels (vertically) on the top/bottom of the container in which scrolling will not occur.
+   * Defaults to 0.
+   */
   @Input() scrollBuffer = 0;
+
+  /**
+   * Tolerance in pixels (vertically) that the cursor must traverse before scrolling.
+   * Defaults to 25.
+   */
   @Input() stableBuffer = 25;
+
+  /**
+   * Multiplier of delta change when scrolling with the mouse wheel.
+   * Defaults to 2.
+   */
+  @Input() wheelMultiplier = 2;
 
   // The Directive's Element.
   private elem: any;
@@ -224,7 +235,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
     // Third -------------------------------------------------------------
     //  Update the Content Container Position
 
-    const distance = this.getChildTop() - this.getElemTop() - delta;
+    const distance = this.getChildTop() - this.getElemTop() - (delta * this.wheelMultiplier);
     this.moveChild(distance);
   }
 
