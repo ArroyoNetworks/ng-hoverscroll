@@ -10,3 +10,4 @@
  */
 
 export * from './lib/hoverscroll.module';
+export {HoverScrollDirective} from './lib/hoverscroll.directive';
