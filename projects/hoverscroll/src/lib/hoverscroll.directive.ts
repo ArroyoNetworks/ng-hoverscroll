@@ -199,10 +199,12 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
     // First -------------------------------------------------------------
     //  Disable Pointer Events
+
     this.disablePointerEvents = true;
 
     // Second ------------------------------------------------------------
     //  Determine how many pixels to scroll
+
     let delta = 0;
     switch (wheel.deltaMode) {
       case ScrollDeltaMode.DOM_DELTA_PIXEL:
@@ -221,7 +223,8 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
     // Third -------------------------------------------------------------
     //  Update the Content Container Position
-    const distance = this.getChildTop() - delta;
+
+    const distance = this.getChildTop() - this.getElemTop() - delta;
     this.moveChild(distance);
   }
 
@@ -231,9 +234,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
           auditTime(500)
         )
         .subscribe(() => {
-          if (!this.isScrollable()) {
-            this.moveToTop();
-          }
+          this.reset();
         });
   }
 
