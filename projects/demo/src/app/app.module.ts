@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
-import { HoverScrollModule } from  'projects/hoverscroll/src/public-api'
+import { HoverScrollModule } from  'projects/hoverscroll/src/public-api';
 
 @NgModule({
   declarations: [

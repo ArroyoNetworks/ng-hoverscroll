@@ -5,7 +5,14 @@
  * --------------------------------------------------------------------------
  */
 
-import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Subscription, fromEvent } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
@@ -38,7 +45,11 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   private elem: any;
 
   // Initial Absolute Y-Coordinate on Enter.
+  // This is used to determine if the mouse exceeds the stability buffers.
   private initY = 0;
+
+  // The last known Y-Coordinate used on pointer move.
+  private lastKnownY = 0;
 
   // Flag to Determine if Stabilizing Buffer has been Exceeded.
   private hasExceededStableBuffer = false;
@@ -68,6 +79,41 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Moves the child element to the top of the parent view.
+   */
+  public moveToTop() {
+    this.moveChild(0);
+  }
+
+  /**
+   * Moves the child element to the given absolute Y-coordinate.
+   *
+   * @param pointerY The Y-coordinate to move to.
+   */
+  public moveTo(pointerY) {
+    const distance = this.calculateDistance(pointerY);
+    this.moveChild(-distance);
+  }
+
+  /**
+   * Moves the child element to the last known Y-coordinate.
+   * This can be used to programmatically "re-center" the scroll.
+   */
+  public reset() {
+    this.moveTo(this.lastKnownY);
+  }
+
+  /**
+   * Determine if the child element can be scrolled.
+   *
+   * @returns true if the content is scrollable, e.g. the inside content is larger than the outside
+   * container, otherwise false.
+   */
+  public isScrollable(): boolean {
+    return this.getElemHeight() < this.getChildHeight();
+  }
+
   /* -----------------------------
       Pointer Event Handlers
    ----------------------------- */
@@ -79,6 +125,12 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
   @HostListener('pointerleave')
   private onPointerLeave() {
+    if (!this.isScrollable()) {
+      this.moveToTop();
+    }
+
+    // Reset Initial Y Coordinate
+    this.initY = 0;
 
     // Reset Flags
     this.hasExceededStableBuffer = false;
@@ -88,12 +140,17 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   @HostListener('pointermove', ['$event'])
   private onPointerMove(pointer: PointerEvent) {
 
-    if (!this.isScrollable() || this.disablePointerEvents) {
+    if (this.disablePointerEvents) {
       return;
     }
 
-    // First -------------------------------------------------------------
+    if (!this.isScrollable()) {
+      this.moveToTop();
+      return;
+    }
+
     //  Determine the Pointer has Exceeded the Stabilizing Threshold
+
     if (pointer.pageY > (this.initY + this.stableBuffer) || pointer.pageY < (this.initY - this.stableBuffer)) {
       this.hasExceededStableBuffer = true;
     }
@@ -102,13 +159,13 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
       return;
     }
 
-    // Second ------------------------------------------------------------
-    //  Determine the Y coordinate in relation to the top of the container vs the window
-    const relativeY = pointer.pageY - this.getElemTop();
+    this.moveTo(pointer.pageY);
+    this.lastKnownY = pointer.pageY;
+  }
 
+  private calculateDistance(pointerY: number): number {
+    const relativeY = pointerY - this.getElemTop();
 
-    // Third -------------------------------------------------------------
-    //  Determine the Distance to Scroll the Content taking into account the Scroll Buffer Amount
     let distance = (relativeY - this.scrollBuffer) * this.getHiddenRatio();
 
     // If we are within the top buffer, move all the way up
@@ -121,9 +178,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
       distance = this.getHeightDifference();
     }
 
-    // Fourth ------------------------------------------------------------
-    //  Update the Content Container Position
-    this.moveChild(-distance);
+    return distance;
   }
 
   /* -----------------------------
@@ -176,16 +231,10 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
           auditTime(500)
         )
         .subscribe(() => {
-          this.onWindowResizeEvent();
+          if (!this.isScrollable()) {
+            this.moveToTop();
+          }
         });
-  }
-
-  private onWindowResizeEvent() {
-    // If the content can no longer be scrolled after a resize occurs,
-    // move the content back to the top.
-    if (!this.isScrollable()) {
-      this.moveChild(0);
-    }
   }
 
   /* -----------------------------
@@ -221,14 +270,6 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
    ----------------------------- */
 
   /**
-   * @returns true if the content is scrollable, e.g. the inside content is larger than the outside
-   * container, otherwise false.
-   */
-  private isScrollable(): boolean {
-    return this.getElemHeight() < this.getChildHeight();
-  }
-
-  /**
    * @returns The percentage of the content which is hidden and must be scrolled into view.
    */
   private getHiddenRatio(): number {
@@ -246,7 +287,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
     // Make sure we do not go past the top of the content, and if we are,
     // just set the distance to the top.
-    if (yPos > this.getElemTop()) {
+    if (yPos > 0) {
       yPos = 0;
     }
 
