@@ -63,6 +63,9 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   // The last known Y-Coordinate used on pointer move.
   private lastKnownY = 0;
 
+  // The current Y-Coordinate transform settings.
+  private currentTransform = 0;
+
   // Flag to Determine if Stabilizing Buffer has been Exceeded.
   private hasExceededStableBuffer = false;
 
@@ -121,6 +124,35 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
    */
   public moveToLast() {
     this.moveTo(this.lastKnownY);
+  }
+
+  /**
+   * Ensures that the scrollable content is not out of bounds.
+   *
+   * This can be used when the child element changes size dynamically
+   * (e.g. expandable menu items) to ensure that the content is
+   * with-in bounds after a significant height change.
+   *
+   * @returns true if the element was reset, otherwise false if no changes
+   * were made.
+   */
+  public reset() {
+
+    // Make sure we do not go past the end of the content, and if we are,
+    // just set the distance to the bottom.
+    if (this.currentTransform < -this.getHeightDifference()) {
+      this.moveToBottom();
+      return true;
+    }
+
+    // Make sure we do not go past the top of the content, and if we are,
+    // just set the distance to the top.
+    if (this.currentTransform > 0) {
+      this.moveToTop();
+      return true;
+    }
+
+    return false;
   }
 
   /**
@@ -312,6 +344,8 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
     if (yPos > 0) {
       yPos = 0;
     }
+
+    this.currentTransform = yPos;
 
     const transform = 'translateY(' + yPos + 'px)';
     this.getChild().style.transform = transform;
