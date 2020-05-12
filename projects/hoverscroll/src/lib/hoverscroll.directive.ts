@@ -30,6 +30,7 @@ enum ScrollDeltaMode {
  *  Currently it assumes the immediate child element is the contents of the scrollable element.
  */
 @Directive({
+  // tslint:disable:directive-selector
   selector: '[hoverScroll]'
 })
 export class HoverScrollDirective implements OnInit, OnDestroy {
@@ -197,6 +198,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
    ----------------------------- */
 
   private setupWheelObservables() {
+    // tslint:disable:no-string-literal
     this.eventSubs['onWheel'] =  fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
         .pipe(
           auditTime(10)
@@ -240,6 +242,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   }
 
   private setupResizeObservables() {
+    // tslint:disable:no-string-literal
     this.eventSubs['onWindowResize'] = fromEvent<Event>(window, 'resize')
         .pipe(
           auditTime(500)
