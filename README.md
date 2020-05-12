@@ -84,6 +84,17 @@ The directive takes the following inputs:
 | stableBuffer              | number    | `25`      | Tolerance in pixels (vertically) that the cursor must traverse before scrolling.
 | wheelMultiplier           | number    | `2`       | Multiplier of delta change when scrolling with the mouse wheel.
 
+The directive also exposes the following public methods:
+
+| Method                    | Description   |
+|:--------------------------|:--------------|
+| moveToTop                 | Moves the scrollable content to the top of the parent view.
+| moveToBottom              | Moves the scrollable content to the bottom of the parent view.
+| moveToLast                | Moves the scrollable content to the last known Y-coordinate of the mouse.
+| moveTo(Y-coordinate)      | Moves the scrollable content to the given absolute Y-coordinate.
+| reset                     | Ensures that the scrollable content is not out-of-bounds of the parent.
+| isScrollable              | Returns true if the content is scrollable (e.g. the inside content is larger than the outside content).
+
 
 ## License
 
