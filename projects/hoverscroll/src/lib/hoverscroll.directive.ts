@@ -119,7 +119,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
    * Moves the child element to the last known Y-coordinate.
    * This can be used to programmatically "re-center" the scroll.
    */
-  public reset() {
+  public moveToLast() {
     this.moveTo(this.lastKnownY);
   }
 
