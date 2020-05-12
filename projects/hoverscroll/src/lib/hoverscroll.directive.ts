@@ -99,6 +99,13 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   }
 
   /**
+   * Moves the child element to the bottom of the parent view.
+   */
+  public moveToBottom() {
+    this.moveChild(-this.getHeightDifference());
+  }
+
+  /**
    * Moves the child element to the given absolute Y-coordinate.
    *
    * @param pointerY The Y-coordinate to move to.
