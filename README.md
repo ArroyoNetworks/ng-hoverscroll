@@ -10,8 +10,9 @@ Angular Support
 
 | Version           | Angular Version   |
 |:-----------------:|:-----------------:|
-| 2.0.0             | 6-7               |
-| **2.0.2**         | 6-9               |
+| 2.0.0 - 2.0.1     | 6-7               |
+| 2.0.2 - Current   | 6-9               |
+
 
 
 No external dependencies other than Angular are required!
