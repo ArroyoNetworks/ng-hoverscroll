@@ -18,12 +18,6 @@ import { Subscription, fromEvent } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
 
-enum ScrollDeltaMode {
-  DOM_DELTA_PIXEL = 0x00,
-  DOM_DELTA_LINE = 0x01,
-  DOM_DELTA_PAGE = 0x02,
-}
-
 /**
  *  This directive creates an effect that vertically scrolls an element automatically when it is hovered upon when
  *  its contents have a greater height.
@@ -270,13 +264,13 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
     let delta = 0;
     switch (wheel.deltaMode) {
-      case ScrollDeltaMode.DOM_DELTA_PIXEL:
+      case wheel.DOM_DELTA_PIXEL:
         delta = wheel.deltaY;
         break;
-      case ScrollDeltaMode.DOM_DELTA_LINE:
+      case wheel.DOM_DELTA_LINE:
         delta = this.getChild().style.lineHeight * wheel.deltaY;
         break;
-      case ScrollDeltaMode.DOM_DELTA_PAGE:
+      case wheel.DOM_DELTA_PAGE:
         delta = this.getElemHeight() * wheel.deltaY;
         break;
       default:
