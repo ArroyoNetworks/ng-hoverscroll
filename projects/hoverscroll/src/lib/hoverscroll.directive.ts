@@ -13,6 +13,7 @@ import {
   OnDestroy,
   OnInit,
 } from '@angular/core';
+
 import { Subscription, fromEvent } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 
@@ -238,10 +239,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
 
   private setupWheelObservables() {
     // tslint:disable:no-string-literal
-    this.eventSubs['onWheel'] =  fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
-        .pipe(
-          auditTime(10)
-        )
+    this.eventSubs['onWheel'] = fromEvent<WheelEvent>(this.elem.nativeElement, 'wheel')
         .subscribe((event) => {
           this.onWheelEvent(event);
         });
@@ -255,6 +253,19 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
     this.disablePointerEvents = true;
 
     // Second ------------------------------------------------------------
+    //  Check if we need to Prevent the Event's Default Behavior
+
+    // If we're not at the top or not at the bottom, disable the
+    // prevent the event's default.
+    if (!this.isAtTop() && wheel.deltaY < 0) {
+      wheel.preventDefault();
+    }
+
+    if (!this.isAtBottom() && wheel.deltaY > 0) {
+      wheel.preventDefault();
+    }
+
+    // Third -------------------------------------------------------------
     //  Determine how many pixels to scroll
 
     let delta = 0;
@@ -273,7 +284,7 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
         return;
     }
 
-    // Third -------------------------------------------------------------
+    // Fourth ------------------------------------------------------------
     //  Update the Content Container Position
 
     const distance = this.getChildTop() - this.getElemTop() - (delta * this.wheelMultiplier);
@@ -329,6 +340,14 @@ export class HoverScrollDirective implements OnInit, OnDestroy {
   private getHiddenRatio(): number {
     // Make sure we subtract twice the scrollBuffer so that it is added to both the top and the bottom.
     return this.getHeightDifference() / (this.getElemHeight() - (2 * this.scrollBuffer));
+  }
+
+  private isAtTop() {
+    return this.currentTransform >= 0;
+  }
+
+  private isAtBottom() {
+    return this.currentTransform <= -this.getHeightDifference();
   }
 
   private moveChild(yPos: number) {
