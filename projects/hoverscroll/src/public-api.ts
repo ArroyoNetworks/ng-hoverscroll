@@ -9,5 +9,5 @@
  * Public API Surface of HoverScroll
  */
 
-export * from './lib/hoverscroll.module';
-export {HoverScrollDirective} from './lib/hoverscroll.directive';
+export { HoverScrollModule } from './lib/hoverscroll.module';
+export { HoverScrollDirective } from './lib/hoverscroll.directive';
