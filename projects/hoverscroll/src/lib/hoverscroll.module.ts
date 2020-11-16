@@ -14,7 +14,7 @@ import { HoverScrollDirective } from './hoverscroll.directive';
   exports: [HoverScrollDirective]
 })
 export class HoverScrollModule {
-  public static forRoot(): ModuleWithProviders {
+  public static forRoot(): ModuleWithProviders<HoverScrollModule> {
     return {ngModule: HoverScrollModule, providers: []};
   }
 }
